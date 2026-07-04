@@ -1,0 +1,166 @@
+{% extends 'inventory/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="d-flex align-items-center gap-3 mb-4">
+      <a href="{% url 'product_list' %}" class="btn btn-outline-secondary btn-icon bg-white text-secondary"
+        title="Back to catalog">
+        <i class="bi bi-arrow-left fs-5"></i>
+      </a>
+      <div>
+        <h2 class="fw-bold mb-1" style="font-family:'Outfit',serif; font-size:1.6rem; color:var(--text-primary);">
+          {% if action == 'Add' %}Add New Product{% else %}Edit Product{% endif %}
+        </h2>
+        <p class="text-secondary mb-0" style="font-weight: 500;">
+          {% if action == 'Add' %}Fill in the details below to add a product to the catalog{% else %}Update existing
+          product data in the system{% endif %}
+        </p>
+      </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-white py-3 border-bottom d-flex align-items-center gap-2">
+        <i class="bi bi-file-earmark-diff text-primary fs-5"></i>
+        <span class="fw-bold">{% if action == 'Add' %}New Product Specification{% else %}Edit: {{ product.name }}{% endif %}</span>
+      </div>
+
+      <div class="card-body p-4">
+        <form method="post" enctype="multipart/form-data" id="productForm">
+          {% csrf_token %}
+
+          {% if form.non_field_errors %}
+          <div class="alert alert-danger border-0 mb-4 rounded-3 d-flex align-items-center gap-2" role="alert"
+            style="background: rgba(239, 68, 68, 0.05); color: var(--danger);">
+            <i class="bi bi-exclamation-circle-fill"></i>
+            <div>
+              {% for error in form.non_field_errors %}
+              <div>{{ error }}</div>
+              {% endfor %}
+            </div>
+          </div>
+          {% endif %}
+
+          <div class="row">
+            <div class="col-md-8">
+              {% for field in form %}
+              {% if action == 'Edit' and field.html_name == 'stock' %}
+
+              {% else %}
+              <div class="mb-4">
+                <label class="form-label fw-bold text-dark mb-2" style="font-size:0.85rem;">
+                  {{ field.label }}
+                  {% if field.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+
+                {{ field }}
+
+                {% if field.errors %}
+                <div class="invalid-feedback-error text-danger fw-semibold mt-1" style="font-size:0.8rem;">
+                  <i class="bi bi-exclamation-circle me-1"></i>{{ field.errors|join:", " }}
+                </div>
+                {% endif %}
+                {% if field.help_text %}
+                <div class="text-secondary mt-1" style="font-size:0.75rem; font-weight: 500;">
+                  <i class="bi bi-info-circle me-1"></i>{{ field.help_text }}
+                </div>
+                {% endif %}
+              </div>
+              {% endif %}
+              {% endfor %}
+            </div>
+
+            <div class="col-md-4 border-start border-secondary border-opacity-10 ps-md-4">
+              <div class="sticky-top" style="top: 90px; z-index: 1;">
+                <label class="form-label fw-bold text-dark mb-2" style="font-size:0.85rem;">Image Preview</label>
+
+                <div
+                  class="card border border-secondary border-opacity-25 bg-light d-flex align-items-center justify-content-center overflow-hidden position-relative rounded-3"
+                  style="aspect-ratio: 1/1; max-width: 260px;">
+                  <div id="imagePreviewPlaceholder" class="text-center p-4 {% if product.photo %}d-none{% endif %}">
+                    <i class="bi bi-image text-secondary opacity-50" style="font-size: 3rem;"></i>
+                    <p class="text-secondary mb-0 mt-2" style="font-size: 0.8rem; font-weight: 500;">Selected photo will
+                      appear here</p>
+                  </div>
+
+
+                  <img id="imagePreview" src="{% if product.photo %}{{ product.photo.url }}{% endif %}"
+                    data-initial-src="{% if product.photo %}{{ product.photo.url }}{% endif %}"
+                    class="w-100 h-100 {% if not product.photo %}d-none{% endif %}" style="object-fit: cover;"
+                    alt="Product Preview" />
+                </div>
+
+                <div class="mt-3 text-secondary" style="font-size: 0.75rem; font-weight: 500; line-height: 1.4;">
+                  <i class="bi bi-shield-lock-fill text-primary"></i> Upload clear product packaging. Ideal size is
+                  square (e.g. 500x500 px), PNG/JPG formats.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {% if action == 'Edit' %}
+          <div class="mb-4 p-3 rounded-3 d-flex align-items-center gap-2 border"
+            style="background: rgba(37, 99, 235, 0.05); border-color: rgba(37, 99, 235, 0.1) !important;">
+            <i class="bi bi-info-circle-fill text-primary"></i>
+            <span style="font-size:0.82rem; color: var(--primary); font-weight:600;">NOTE: Stock changes can only be
+              logged using Stock In or Stock Out transactions.</span>
+          </div>
+          {% endif %}
+
+          <div class="d-flex gap-3 pt-3 border-top border-secondary border-opacity-10">
+            <button type="submit" class="btn btn-primary px-4">
+              <i class="bi bi-check-lg"></i> Save Product
+            </button>
+            <a href="{% url 'product_list' %}" class="btn btn-outline-secondary bg-white">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const fileInput = document.querySelector('input[type="file"][name="photo"]');
+    const imagePreview = document.getElementById('imagePreview');
+    const previewPlaceholder = document.getElementById('imagePreviewPlaceholder');
+
+    if (fileInput) {
+      fileInput.addEventListener('change', function (e) {
+        const file = e.target.files[0];
+
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function (event) {
+            imagePreview.src = event.target.result;
+            imagePreview.classList.remove('d-none');
+            previewPlaceholder.classList.add('d-none');
+          };
+          reader.readAsDataURL(file);
+        } else {
+          const initialSrc = imagePreview.getAttribute('data-initial-src');
+          if (initialSrc) {
+            imagePreview.src = initialSrc;
+            imagePreview.classList.remove('d-none');
+            previewPlaceholder.classList.add('d-none');
+          } else {
+            imagePreview.src = "";
+            imagePreview.classList.add('d-none');
+            previewPlaceholder.classList.remove('d-none');
+          }
+        }
+      });
+    }
+
+    document.querySelectorAll('.invalid-feedback-error').forEach(function (errorContainer) {
+      const fieldBlock = errorContainer.closest('.mb-4');
+      if (fieldBlock) {
+        const inputElement = fieldBlock.querySelector('.form-control, .form-select');
+        if (inputElement) {
+          inputElement.classList.add('is-invalid');
+        }
+      }
+    });
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'inventory/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+  <div class="col-md-6 col-lg-5">
+    <div class="card border-0 shadow-lg animate__animated animate__zoomIn">
+      <div class="card-header bg-danger bg-opacity-10 py-3 border-bottom d-flex align-items-center gap-2" style="border-left: 5px solid var(--danger);">
+        <i class="bi bi-exclamation-triangle-fill text-danger fs-5"></i>
+        <span class="fw-bold text-danger">Confirm Deletion</span>
+      </div>
+      
+      <div class="card-body p-4 text-center">
+        <div class="rounded-circle bg-danger bg-opacity-10 d-flex align-items-center justify-content-center mx-auto mb-4" style="width: 72px; height: 72px;">
+          <i class="bi bi-person-x-fill text-danger fs-2 animate__animated animate__pulse animate__infinite"></i>
+        </div>
+        
+        <h4 class="fw-bold text-dark mb-2" style="font-family: 'Outfit', sans-serif;">Delete User Account?</h4>
+        <h5 class="text-secondary mb-3" style="font-size: 1rem;">@{{ target_user.username }}</h5>
+        
+        <p class="text-secondary mx-auto mb-4" style="font-size: 0.85rem; max-width: 340px; line-height: 1.5;">
+          This action <strong>cannot be undone</strong>. This profile will be permanently deleted and the user will lose all system credentials and access privileges.
+        </p>
+        
+        <div class="d-flex gap-3 justify-content-center">
+          <form method="post" class="d-inline flex-fill">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger w-100 justify-content-center">
+              <i class="bi bi-trash-fill"></i> Yes, Delete Account
+            </button>
+          </form>
+          <a href="{% url 'user_list' %}" class="btn btn-outline-secondary bg-white flex-fill justify-content-center">Cancel</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

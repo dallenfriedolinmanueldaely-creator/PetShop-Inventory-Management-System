@@ -1,0 +1,84 @@
+{% extends 'inventory/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-6">
+    <div class="d-flex align-items-center gap-3 mb-4">
+      <a href="{% url 'stock_in_list' %}" class="btn btn-outline-secondary btn-icon bg-white text-secondary" title="Back to ledger">
+        <i class="bi bi-arrow-left fs-5"></i>
+      </a>
+      <div>
+        <h2 class="fw-bold mb-1" style="font-family:'Outfit',serif; font-size:1.6rem; color:var(--text-primary);">Record Stock In</h2>
+        <p class="text-secondary mb-0" style="font-weight: 500;">Add incoming products to increase active stock count</p>
+      </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-white py-3 border-bottom d-flex align-items-center gap-2">
+        <i class="bi bi-plus-circle-fill text-success fs-5"></i>
+        <span class="fw-bold">Incoming Stock Transaction Details</span>
+      </div>
+      
+      <div class="card-body p-4">
+        <form method="post" id="stockInForm">
+          {% csrf_token %}
+          
+          {% if form.non_field_errors %}
+          <div class="alert alert-danger border-0 mb-4 rounded-3 d-flex align-items-center gap-2" role="alert" style="background: rgba(239, 68, 68, 0.05); color: var(--danger);">
+            <i class="bi bi-exclamation-circle-fill"></i>
+            <div>
+              {% for error in form.non_field_errors %}
+              <div>{{ error }}</div>
+              {% endfor %}
+            </div>
+          </div>
+          {% endif %}
+
+          {% for field in form %}
+          <div class="mb-4">
+            <label class="form-label fw-bold text-dark mb-2" style="font-size:0.85rem;">
+              {{ field.label }}
+              {% if field.field.required %}<span class="text-danger">*</span>{% endif %}
+            </label>
+            
+            {{ field }}
+            
+            {% if field.errors %}
+             <div class="invalid-feedback-error text-danger fw-semibold mt-1" style="font-size:0.8rem;">
+               <i class="bi bi-exclamation-circle me-1"></i>{{ field.errors|join:", " }}
+             </div>
+             {% endif %}
+            {% if field.help_text %}
+            <div class="text-secondary mt-1" style="font-size:0.75rem; font-weight: 500;">
+              <i class="bi bi-info-circle me-1"></i>{{ field.help_text }}
+            </div>
+            {% endif %}
+          </div>
+          {% endfor %}
+
+          <div class="d-flex gap-3 pt-3 border-top border-secondary border-opacity-10">
+            <button type="submit" class="btn btn-success px-4">
+              <i class="bi bi-check-lg"></i> Record Restocking
+            </button>
+            <a href="{% url 'stock_in_list' %}" class="btn btn-outline-secondary bg-white">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll('.invalid-feedback-error').forEach(function(errorContainer) {
+      const fieldBlock = errorContainer.closest('.mb-4');
+      if (fieldBlock) {
+        const inputElement = fieldBlock.querySelector('.form-control, .form-select');
+        if (inputElement) {
+          inputElement.classList.add('is-invalid');
+        }
+      }
+    });
+  });
+</script>
+{% endblock %}

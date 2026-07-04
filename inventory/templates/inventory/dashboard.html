@@ -1,0 +1,541 @@
+{% extends 'inventory/base.html' %}
+{% block extra_css %}
+<style>
+  .hero-welcome {
+    background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  .hero-welcome::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 200px;
+    height: 200px;
+    background: rgba(37, 99, 235, 0.15);
+    border-radius: 50%;
+    filter: blur(50px);
+  }
+  .hero-welcome h2 {
+    color: #F8FAFC;
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .hero-welcome p {
+    color: #94A3B8;
+    margin-bottom: 0;
+    font-weight: 500;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: var(--transition);
+  }
+  .stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+  .stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.35rem;
+    flex-shrink: 0;
+  }
+  .stat-val {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+    font-family: "Outfit", sans-serif;
+  }
+  .stat-lbl {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .timeline-item {
+    position: relative;
+    padding-left: 28px;
+    padding-bottom: 16px;
+    border-left: 2px solid var(--border-color);
+  }
+  .timeline-item:last-child {
+    border-left: none;
+    padding-bottom: 0;
+  }
+  .timeline-item::after {
+    content: '';
+    position: absolute;
+    left: -7px;
+    top: 4px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--primary);
+    border: 2px solid var(--surface);
+  }
+  .timeline-item.added::after { background: var(--secondary); }
+  .timeline-item.updated::after { background: var(--warning); }
+  .timeline-item.deleted::after { background: var(--danger); }
+  
+  .activity-time {
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+  .product-thumb-card {
+    background: #F8FAFC;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    text-align: center;
+    transition: var(--transition);
+    height: 100%;
+  }
+  .product-thumb-card:hover {
+    background: #FFFFFF;
+    border-color: var(--primary);
+    box-shadow: var(--shadow-sm);
+  }
+  .chart-container {
+    position: relative;
+    height: 240px;
+    width: 100%;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="hero-welcome">
+  <div class="row align-items-center justify-content-between g-3">
+    <div class="col-md-8">
+      <h2>Hiii, {{ request.user.username }}!!!</h2>
+      <p>Take good care of your pets today, they deserve all the love… RawRrrr</p>
+    </div>
+    <div class="col-md-4 text-md-end">
+      <div class="d-flex gap-2 justify-content-md-end flex-wrap">
+        {% if user_role == 'admin' or user_role == 'owner' %}
+        <a href="{% url 'add_product' %}" class="btn btn-primary">
+          <i class="bi bi-plus-lg"></i> Add Product
+        </a>
+        {% endif %}
+        <a href="{% url 'product_list' %}" class="btn btn-outline-secondary bg-white text-dark">
+          <i class="bi bi-list-ul"></i> Product Catalog
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="row g-3 mb-4">
+
+  <div class="col-6 col-md-4 col-lg-2">
+    <div class="stat-card">
+      <div class="stat-icon" style="background: rgba(37, 99, 235, 0.1); color: var(--primary);">
+        <i class="bi bi-box-seam-fill"></i>
+      </div>
+      <div>
+        <div class="stat-val">{{ total_products }}</div>
+        <div class="stat-lbl">Products</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-6 col-md-4 col-lg-2">
+    <div class="stat-card">
+      <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: var(--secondary);">
+        <i class="bi bi-tags-fill"></i>
+      </div>
+      <div>
+        <div class="stat-val">{{ category_data|length }}</div>
+        <div class="stat-lbl">Categories</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-6 col-md-4 col-lg-2">
+    <div class="stat-card">
+      <div class="stat-icon" style="background: rgba(139, 92, 246, 0.1); color: #8B5CF6;">
+        <i class="bi bi-boxes"></i>
+      </div>
+      <div>
+        <div class="stat-val">{{ total_stock }}</div>
+        <div class="stat-lbl">Total Stock</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-6 col-md-4 col-lg-2">
+    <div class="stat-card">
+      <div class="stat-icon" style="background: rgba(100, 116, 139, 0.1); color: var(--text-secondary);">
+        <i class="bi bi-people-fill"></i>
+      </div>
+      <div>
+        <div class="stat-val">{{ total_users }}</div>
+        <div class="stat-lbl">Users</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-6 col-md-4 col-lg-2">
+    <div class="stat-card">
+      <div class="stat-icon" style="background: rgba(34, 197, 94, 0.1); color: var(--success);">
+        <i class="bi bi-arrow-down-left-circle-fill"></i>
+      </div>
+      <div>
+        <div class="stat-val">+{{ stock_in_this_month }}</div>
+        <div class="stat-lbl">In (Month)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-6 col-md-4 col-lg-2">
+    <div class="stat-card">
+      <div class="stat-icon" style="background: rgba(239, 68, 68, 0.1); color: var(--danger);">
+        <i class="bi bi-arrow-up-right-circle-fill"></i>
+      </div>
+      <div>
+        <div class="stat-val">-{{ stock_out_this_month }}</div>
+        <div class="stat-lbl">Out (Month)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="row g-4 mb-4">
+
+  <div class="col-lg-7">
+    <div class="card h-100">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-graph-up text-primary me-2"></i>Stock Movement Analytics</span>
+        <span class="badge bg-light text-secondary border">Last 7 Days</span>
+      </div>
+      <div class="card-body">
+        <div class="chart-container">
+          <canvas id="movementChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="col-lg-5">
+    <div class="card h-100">
+      <div class="card-header">
+        <span><i class="bi bi-pie-chart text-secondary me-2"></i>Inventory Distribution</span>
+      </div>
+      <div class="card-body d-flex flex-column align-items-center justify-content-center">
+        <div class="row w-100 align-items-center g-3">
+          <div class="col-6 text-center border-end">
+            <h6 class="text-secondary fw-semibold mb-2">Category Spread</h6>
+            <div style="height: 140px; position: relative;">
+              <canvas id="categoryChart"></canvas>
+            </div>
+          </div>
+          <div class="col-6 text-center">
+            <h6 class="text-secondary fw-semibold mb-2">Pet Target Type</h6>
+            <div style="height: 140px; position: relative;">
+              <canvas id="petChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="row g-4 mb-4">
+
+  <div class="col-md-6 col-lg-4">
+    <div class="card h-100">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-exclamation-triangle text-warning me-2"></i>Stock Alerts</span>
+        <a href="{% url 'low_stock_alert' %}" class="btn btn-sm btn-outline-secondary py-1" style="font-size:0.75rem;">View All</a>
+      </div>
+      <div class="card-body py-3">
+        {% if out_of_stock_products or low_stock_products %}
+
+          {% for p in out_of_stock_products %}
+          <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+            <div class="d-flex align-items-center gap-2">
+              <span class="p-2 rounded-circle bg-danger bg-opacity-10 text-danger"><i class="bi bi-x-circle-fill"></i></span>
+              <span class="fw-semibold text-truncate" style="max-width: 160px;">{{ p.name }}</span>
+            </div>
+            <span class="status-pill status-out">Out of Stock</span>
+          </div>
+          {% endfor %}
+
+
+          {% for p in low_stock_products %}
+          <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+            <div class="d-flex align-items-center gap-2">
+              <span class="p-2 rounded-circle bg-warning bg-opacity-10 text-warning"><i class="bi bi-exclamation-triangle-fill"></i></span>
+              <span class="fw-semibold text-truncate" style="max-width: 160px;">{{ p.name }}</span>
+            </div>
+            <span class="status-pill status-low">{{ p.stock }} left</span>
+          </div>
+          {% endfor %}
+        {% else %}
+          <div class="text-center py-5 text-secondary">
+            <i class="bi bi-shield-check fs-2 text-success"></i>
+            <div class="mt-2 fw-semibold">No critical stock warnings</div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+
+  <div class="col-md-6 col-lg-8">
+    <div class="card h-100">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-clock-history text-secondary me-2"></i>Recent Transactions</span>
+        <div class="d-flex gap-2">
+          <a href="{% url 'stock_in_add' %}" class="btn btn-sm btn-success py-1" style="font-size:0.75rem;"><i class="bi bi-arrow-down-circle"></i> Stock In</a>
+          <a href="{% url 'stock_out_add' %}" class="btn btn-sm btn-danger py-1" style="font-size:0.75rem;"><i class="bi bi-arrow-up-circle"></i> Stock Out</a>
+        </div>
+      </div>
+      <div class="table-responsive">
+        <table class="table mb-0 align-middle">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Type</th>
+              <th>Qty</th>
+              <th>Date</th>
+              <th>By</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for tx in recent_transactions %}
+            <tr>
+              <td class="fw-bold">{{ tx.product.name }}</td>
+              <td>
+                {% if tx.transaction_type == 'IN' %}
+                <span class="status-pill status-in">Stock In</span>
+                {% else %}
+                <span class="status-pill status-out">Stock Out</span>
+                {% endif %}
+              </td>
+              <td><strong>{{ tx.quantity }}</strong></td>
+              <td class="text-secondary" style="font-size: 0.8rem;">{{ tx.date|date:"d M Y H:i" }}</td>
+              <td><span class="badge bg-light text-dark border">{{ tx.recorded_by.username|default:"—" }}</span></td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="5" class="text-center py-5 text-secondary">No stock transactions registered yet.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="row g-4">
+
+  <div class="col-md-5">
+    <div class="card h-100">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-activity text-secondary me-2"></i>Recent Operations Log</span>
+        {% if user_role == 'admin' or user_role == 'owner' %}
+        <a href="{% url 'activity_log' %}" class="btn btn-sm btn-outline-secondary py-1" style="font-size:0.75rem;">Audit Trails</a>
+        {% endif %}
+      </div>
+      <div class="card-body">
+        <div class="pe-1" style="max-height: 340px; overflow-y: auto;">
+          {% for log in recent_activity %}
+          <div class="timeline-item 
+            {% if log.activity_type == 'PRODUCT_ADDED' %}added
+            {% elif log.activity_type == 'PRODUCT_UPDATED' %}updated
+            {% elif log.activity_type == 'PRODUCT_DELETED' %}deleted
+            {% endif %}">
+            <div class="d-flex justify-content-between align-items-baseline">
+              <span class="fw-semibold" style="font-size: 0.85rem;">{{ log.user.username|default:log.username }}</span>
+              <span class="activity-time">{{ log.timestamp|date:"d M H:i" }}</span>
+            </div>
+            <p class="text-secondary mb-0" style="font-size: 0.8rem;">{{ log.details|default:log.activity_type }}</p>
+          </div>
+          {% empty %}
+          <div class="text-center py-5 text-secondary">No operations logged yet.</div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="col-md-7">
+    <div class="card h-100">
+      <div class="card-header">
+        <span><i class="bi bi-grid-3x3-gap text-secondary me-2"></i>Newly Added Products</span>
+      </div>
+      <div class="card-body">
+        <div class="row g-3">
+          {% for p in latest_products %}
+          <div class="col-4">
+            <a href="{% url 'product_detail' p.pk %}" class="text-decoration-none text-dark d-block h-100">
+              <div class="product-thumb-card d-flex flex-column justify-content-between">
+                <div>
+                  {% if p.photo %}
+                  <img src="{{ p.photo.url }}" class="rounded-3 border mb-2" style="width: 100%; height: 64px; object-fit: cover;" alt="{{ p.name }}">
+                  {% else %}
+                  <div class="rounded-3 bg-secondary bg-opacity-10 d-flex align-items-center justify-content-center mb-2" style="width: 100%; height: 64px;">
+                    <i class="bi bi-image text-muted fs-4"></i>
+                  </div>
+                  {% endif %}
+                  <div class="fw-bold text-truncate" style="font-size: 0.78rem;">{{ p.name }}</div>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mt-2 pt-1 border-top border-secondary border-opacity-10">
+                  <span class="text-secondary" style="font-size: 0.72rem;">Stock</span>
+                  <span class="badge bg-primary rounded-pill" style="font-size: 0.7rem;">{{ p.stock }}</span>
+                </div>
+              </div>
+            </a>
+          </div>
+          {% empty %}
+          <div class="col-12 text-center py-5 text-secondary">No products in catalog.</div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{{ movement_labels|json_script:"movement-labels-data" }}
+{{ movement_in|json_script:"movement-in-data" }}
+{{ movement_out|json_script:"movement-out-data" }}
+{{ cat_labels|json_script:"cat-labels-data" }}
+{{ cat_counts|json_script:"cat-counts-data" }}
+{{ total_cats|json_script:"total-cats-data" }}
+{{ total_dogs|json_script:"total-dogs-data" }}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const movementLabels = JSON.parse(document.getElementById('movement-labels-data').textContent);
+    const movementIn = JSON.parse(document.getElementById('movement-in-data').textContent);
+    const movementOut = JSON.parse(document.getElementById('movement-out-data').textContent);
+    const catLabels = JSON.parse(document.getElementById('cat-labels-data').textContent);
+    const catCounts = JSON.parse(document.getElementById('cat-counts-data').textContent);
+    const totalCats = JSON.parse(document.getElementById('total-cats-data').textContent);
+    const totalDogs = JSON.parse(document.getElementById('total-dogs-data').textContent);
+
+    // 1. Stock Movement Chart (Line)
+    const ctxMovement = document.getElementById('movementChart').getContext('2d');
+    new Chart(ctxMovement, {
+      type: 'line',
+      data: {
+        labels: movementLabels,
+        datasets: [
+          {
+            label: 'Stock In',
+            data: movementIn,
+            borderColor: '#10B981',
+            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+            fill: true,
+            tension: 0.4,
+            borderWidth: 2
+          },
+          {
+            label: 'Stock Out',
+            data: movementOut,
+            borderColor: '#EF4444',
+            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+            fill: true,
+            tension: 0.4,
+            borderWidth: 2
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'top',
+            labels: { boxWidth: 12, font: { family: 'Inter' } }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: { color: '#F1F5F9' },
+            ticks: { font: { family: 'Inter' } }
+          },
+          x: {
+            grid: { display: false },
+            ticks: { font: { family: 'Inter' } }
+          }
+        }
+      }
+    });
+
+    // 2. Category Spread Chart (Doughnut)
+    const ctxCategory = document.getElementById('categoryChart').getContext('2d');
+    new Chart(ctxCategory, {
+      type: 'doughnut',
+      data: {
+        labels: catLabels,
+        datasets: [{
+          data: catCounts,
+          backgroundColor: ['#2563EB', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899']
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false }
+        },
+        cutout: '65%'
+      }
+    });
+
+    // 3. Pet Target Chart (Pie)
+    const ctxPet = document.getElementById('petChart').getContext('2d');
+    new Chart(ctxPet, {
+      type: 'pie',
+      data: {
+        labels: ['Cat', 'Dog'],
+        datasets: [{
+          data: [totalCats, totalDogs],
+          backgroundColor: ['#10B981', '#2563EB']
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false }
+        }
+      }
+    });
+  });
+</script>
+{% endblock %}

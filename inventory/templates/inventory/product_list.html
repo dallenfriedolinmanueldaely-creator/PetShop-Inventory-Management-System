@@ -1,0 +1,413 @@
+{% extends 'inventory/base.html' %}
+
+{% block extra_css %}
+<style>
+  .product-row {
+    transition: background 0.2s;
+  }
+  .product-row-out {
+    background-color: rgba(239, 68, 68, 0.02) !important;
+  }
+  .product-row-low {
+    background-color: rgba(245, 158, 11, 0.02) !important;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row align-items-center justify-content-between mb-4 g-3">
+  <div>
+    <h2 class="fw-bold mb-1" style="font-family:'Outfit',serif; font-size:1.6rem; color:var(--text-primary);">Product
+      Catalog</h2>
+    <p class="text-secondary mb-0" style="font-weight: 500;">Manage, search, sort, and analyze your inventory items</p>
+  </div>
+  <div class="col-auto">
+    <div class="d-flex align-items-center gap-2 flex-wrap">
+      {% if user_role == 'admin' or user_role == 'owner' %}
+      <div class="dropdown">
+        <button class="btn btn-outline-secondary dropdown-toggle bg-white" type="button" data-bs-toggle="dropdown"
+          aria-expanded="false">
+          <i class="bi bi-download"></i> Export Data
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg p-2 rounded-3 animate__animated animate__fadeIn">
+          <li>
+            <a class="dropdown-item rounded-2 py-2" href="{% url 'export_products_csv' %}?{{ request.GET.urlencode }}">
+              <i class="bi bi-filetype-csv text-success me-2 fs-5"></i> Export as CSV
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item rounded-2 py-2" href="{% url 'export_products_xlsx' %}?{{ request.GET.urlencode }}">
+              <i class="bi bi-file-earmark-excel text-success me-2 fs-5"></i> Export as Excel (.xlsx)
+            </a>
+          </li>
+        </ul>
+      </div>
+      {% endif %}
+
+      {% if low_stock_count > 0 or out_of_stock_count > 0 %}
+      <a href="{% url 'low_stock_alert' %}" class="btn btn-warning">
+        <i class="bi bi-exclamation-triangle-fill"></i> Alerts
+        <span class="badge bg-danger ms-1" style="font-size:0.75rem;">{{ low_stock_count|add:out_of_stock_count }}</span>
+      </a>
+      {% endif %}
+
+      {% if user_role == 'admin' or user_role == 'owner' %}
+      <a href="{% url 'add_product' %}" class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i> Add Product
+      </a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% if low_stock_count > 0 or out_of_stock_count > 0 %}
+<div
+  class="alert alert-warning border-0 shadow-sm d-flex align-items-center justify-content-between mb-4 p-3 rounded-3 animate__animated animate__headShake"
+  role="alert"
+  style="border-left: 4px solid var(--warning) !important; background: rgba(245, 158, 11, 0.05); color: #854F0B;">
+  <div class="d-flex align-items-center gap-2">
+    <i class="bi bi-exclamation-triangle-fill fs-5 text-warning"></i>
+    <div style="font-size: 0.85rem; font-weight: 500;">
+      <strong>Inventory Warning:</strong>
+      {% if out_of_stock_count > 0 %}<span class="badge bg-danger me-1">{{ out_of_stock_count }} items empty</span>{% endif %}
+      {% if low_stock_count > 0 %}<span class="badge bg-warning text-dark me-1">{{ low_stock_count }} items low</span>{% endif %}
+    </div>
+  </div>
+  <a href="{% url 'low_stock_alert' %}" class="text-decoration-none fw-bold text-warning"
+    style="font-size: 0.85rem;">View Details &rarr;</a>
+</div>
+{% endif %}
+
+<div class="card border-0 mb-4 shadow-sm">
+  <div class="card-header bg-white py-3 border-bottom d-flex align-items-center gap-2">
+    <i class="bi bi-sliders2 text-primary fs-5"></i>
+    <span class="fw-bold">Search, Filter & Sorting System</span>
+  </div>
+  <div class="card-body p-4">
+    <form method="get" id="filterForm">
+      <div class="row g-3 align-items-end">
+
+        <div class="col-md-3">
+          <label class="form-label text-secondary fw-semibold mb-1"
+            style="font-size:0.75rem; text-transform:uppercase;">Keyword</label>
+          <div class="position-relative">
+            <i class="bi bi-search text-secondary position-absolute start-3 top-50 translate-middle-y"
+              style="left: 12px;"></i>
+            <input type="text" name="q" value="{{ keyword }}" class="form-control form-control-sm ps-5"
+              placeholder="Search product name..." style="height: 38px;">
+          </div>
+        </div>
+
+        <div class="col-md-2">
+          <label class="form-label text-secondary fw-semibold mb-1"
+            style="font-size:0.75rem; text-transform:uppercase;">Search Field</label>
+          <select name="search_field" class="form-select form-select-sm" style="height: 38px;">
+            <option value="name" {% if search_field == 'name' %}selected{% endif %}>Name</option>
+            <option value="category" {% if search_field == 'category' %}selected{% endif %}>Category</option>
+            <option value="pet" {% if search_field == 'pet' %}selected{% endif %}>Pet Type</option>
+          </select>
+        </div>
+
+
+        <div class="col-md-2 col-sm-6">
+          <label class="form-label text-secondary fw-semibold mb-1"
+            style="font-size:0.75rem; text-transform:uppercase;">Pet Type</label>
+          <select name="pet" class="form-select form-select-sm" style="height: 38px;">
+            <option value="">All Pets</option>
+            <option value="Cat" {% if filter_pet == 'Cat' %}selected{% endif %}>Cat</option>
+            <option value="Dog" {% if filter_pet == 'Dog' %}selected{% endif %}>Dog</option>
+          </select>
+        </div>
+
+
+        <div class="col-md-2 col-sm-6">
+          <label class="form-label text-secondary fw-semibold mb-1"
+            style="font-size:0.75rem; text-transform:uppercase;">Category</label>
+          <select name="category" class="form-select form-select-sm" style="height: 38px;">
+            <option value="">All Categories</option>
+            {% for cat in categories %}
+            <option value="{{ cat }}" {% if filter_category == cat %}selected{% endif %}>{{ cat }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+
+        <div class="col-md-2 col-sm-6">
+          <label class="form-label text-secondary fw-semibold mb-1"
+            style="font-size:0.75rem; text-transform:uppercase;">Sort By</label>
+          <select name="sort_by" class="form-select form-select-sm" style="height: 38px;">
+            <option value="">Default</option>
+            <option value="name" {% if sort_by == 'name' %}selected{% endif %}>Name</option>
+            <option value="price" {% if sort_by == 'price' %}selected{% endif %}>Price</option>
+            <option value="stock" {% if sort_by == 'stock' %}selected{% endif %}>Stock</option>
+          </select>
+        </div>
+
+
+        <div class="col-md-2 col-sm-6">
+          <label class="form-label text-secondary fw-semibold mb-1"
+            style="font-size:0.75rem; text-transform:uppercase;">Order</label>
+          <select name="sort_order" class="form-select form-select-sm" style="height: 38px;">
+            <option value="asc" {% if sort_order == 'asc' %}selected{% endif %}>&uarr; Ascending</option>
+            <option value="desc" {% if sort_order == 'desc' %}selected{% endif %}>&darr; Descending</option>
+          </select>
+        </div>
+      </div>
+
+      <hr class="my-3 text-secondary opacity-25">
+
+
+      <div class="row g-3 align-items-center justify-content-between">
+        <div class="col-auto d-flex align-items-center gap-3 flex-wrap">
+          <span class="text-secondary fw-bold"
+            style="font-size:0.72rem; text-transform:uppercase; letter-spacing:0.8px;">Backend Algorithms</span>
+
+
+          <div class="d-flex align-items-center gap-2">
+            <label class="text-secondary fw-semibold" style="font-size:0.8rem; margin:0;">Search Algo:</label>
+            <select name="search_algo" class="form-select form-select-sm border-secondary-subtle" id="searchAlgoSelect"
+              style="width: auto; height: 32px; font-size:0.8rem; padding: 2px 24px 2px 8px;">
+              <option value="linear" {% if search_algo == 'linear' %}selected{% endif %}>Linear Search</option>
+              <option value="binary" {% if search_algo == 'binary' %}selected{% endif %}>Binary Search</option>
+            </select>
+          </div>
+
+
+          <div class="d-flex align-items-center gap-2">
+            <label class="text-secondary fw-semibold" style="font-size:0.8rem; margin:0;">Sort Algo:</label>
+            <select name="sort_algo" class="form-select form-select-sm border-secondary-subtle"
+              style="width: auto; height: 32px; font-size:0.8rem; padding: 2px 24px 2px 8px;">
+              <option value="bubble" {% if sort_algo == 'bubble' %}selected{% endif %}>Bubble Sort</option>
+              <option value="selection" {% if sort_algo == 'selection' %}selected{% endif %}>Selection Sort</option>
+              <option value="insertion" {% if sort_algo == 'insertion' %}selected{% endif %}>Insertion Sort</option>
+            </select>
+          </div>
+
+
+          <small id="binaryWarning" class="text-danger fw-semibold" style="display:none; font-size:0.78rem;">
+            <i class="bi bi-info-circle-fill"></i> Binary Search only supports <strong>Name</strong> field.
+          </small>
+        </div>
+
+        <div class="col-auto">
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary" style="height: 38px;" onclick="showLoadingState()">
+              <i class="bi bi-funnel-fill"></i> Apply Filters
+            </button>
+            {% if keyword or filter_pet or filter_category or sort_by %}
+            <a href="{% url 'product_list' %}" class="btn btn-outline-secondary bg-white text-secondary"
+              style="height: 38px;" title="Reset filters">
+              <i class="bi bi-x-lg"></i> Clear
+            </a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+
+      {% if keyword or filter_pet or filter_category or sort_by %}
+      <div
+        class="mt-3 pt-2 border-top border-secondary border-opacity-10 d-flex flex-wrap align-items-center justify-content-between g-2">
+        <span class="text-success fw-semibold" style="font-size: 0.85rem;">
+          <i class="bi bi-check-circle-fill"></i> Found {{ search_result_count }} result(s)
+          {% if filter_category %} in <strong>{{ filter_category }}</strong>{% endif %}
+          {% if filter_pet %} for <strong>{{ filter_pet }}s</strong>{% endif %}
+        </span>
+
+        <div class="d-flex gap-2">
+          {% if algo_info_search %}
+          <span class="badge bg-light text-dark border px-2 py-2 rounded-pill" style="font-size:0.75rem;">
+            Search: <strong class="text-primary">{{ algo_info_search.nama }}</strong> &middot; <span
+              class="text-secondary">Complexity: {{ algo_info_search.kompleksitas }}</span>
+          </span>
+          {% endif %}
+          {% if algo_info_sort %}
+          <span class="badge bg-light text-dark border px-2 py-2 rounded-pill" style="font-size:0.75rem;">
+            Sort: <strong class="text-primary">{{ algo_info_sort.nama }}</strong> &middot; <span
+              class="text-secondary">Complexity: {{ algo_info_sort.kompleksitas }}</span>
+          </span>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+    </form>
+  </div>
+</div>
+
+<div class="card border-0 shadow-sm position-relative">
+  <div id="tableLoadingOverlay"
+    class="position-absolute top-0 start-0 w-100 h-100 bg-white bg-opacity-75 d-none align-items-center justify-content-center"
+    style="z-index: 10;">
+    <div class="text-center">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <div class="mt-2 text-secondary fw-semibold" style="font-size: 0.85rem;">Applying Search & Sort...</div>
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table mb-0 align-middle">
+      <thead>
+        <tr>
+          <th>Photo</th>
+          <th>Product Name</th>
+          <th>Pet</th>
+          <th>Category</th>
+          <th class="text-end">Price (Rp)</th>
+          <th class="text-center">Stock</th>
+          <th>Status</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for product in page_obj %}
+        <tr class="product-row {% if product.stock == 0 %}product-row-out{% elif product.stock <= 5 %}product-row-low{% endif %}">
+          <td style="width: 80px;">
+            {% if product.photo %}
+            <img src="{{ product.photo.url }}" class="rounded-3 border border-secondary border-opacity-10"
+              style="width: 48px; height: 48px; object-fit: cover;" alt="{{ product.name }}">
+            {% else %}
+            <div class="rounded-3 bg-secondary bg-opacity-10 d-flex align-items-center justify-content-center"
+              style="width: 48px; height: 48px;">
+              <i class="bi bi-image text-muted fs-5"></i>
+            </div>
+            {% endif %}
+          </td>
+          <td>
+            <a href="{% url 'product_detail' product.pk %}"
+              class="text-decoration-none text-dark fw-bold hover:text-primary">
+              {{ product.name }}
+            </a>
+          </td>
+          <td>
+            <span class="badge bg-light text-secondary border px-2 py-1" style="font-size: 0.75rem;">
+              {% if product.pet == 'Cat' %}<i class="bi bi-cat me-1 text-info"></i>{% else %}<i
+                class="bi bi-dog me-1 text-primary"></i>{% endif %}{{ product.pet }}
+            </span>
+          </td>
+          <td>
+            <span class="text-secondary fw-medium" style="font-size: 0.85rem;">{{ product.category }}</span>
+          </td>
+          <td class="text-end fw-bold text-dark">
+            Rp {{ product.price|floatformat:0 }}
+          </td>
+          <td class="text-center">
+            <span class="fw-bold {% if product.stock == 0 %}text-danger fs-5{% elif product.stock <= 5 %}text-warning{% endif %}">{{ product.stock }}</span>
+          </td>
+          <td>
+            {% if product.stock_status == 'Available' %}
+            <span class="status-pill status-available">Available</span>
+            {% elif product.stock_status == 'Low Stock' %}
+            <span class="status-pill status-low">Low Stock</span>
+            {% else %}
+            <span class="status-pill status-out">Out of Stock</span>
+            {% endif %}
+          </td>
+          <td class="text-end">
+            <div class="d-inline-flex gap-2">
+              <a href="{% url 'product_detail' product.pk %}"
+                class="btn btn-sm btn-outline-secondary btn-icon bg-white text-secondary" title="View details"><i
+                  class="bi bi-eye"></i></a>
+              {% if user_role == 'admin' or user_role == 'owner' %}
+              <a href="{% url 'edit_product' product.pk %}" class="btn btn-sm btn-warning btn-icon"
+                title="Edit product"><i class="bi bi-pencil"></i></a>
+              <a href="{% url 'delete_product' product.pk %}" class="btn btn-sm btn-danger btn-icon"
+                title="Delete product"><i class="bi bi-trash"></i></a>
+              {% endif %}
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="8" class="text-center py-5 text-secondary">
+            <div class="py-4">
+              <i class="bi bi-inbox fs-1 text-secondary opacity-25"></i>
+              <h5 class="mt-3 fw-bold">No products registered</h5>
+              <p class="text-secondary" style="font-size: 0.85rem; max-width: 320px; margin: 8px auto 0;">No items fit
+                your search criteria or the inventory database is empty.</p>
+              {% if user_role == 'admin' or user_role == 'owner' %}
+              <a href="{% url 'add_product' %}" class="btn btn-primary mt-3"><i class="bi bi-plus-lg"></i> Register
+                Product</a>
+              {% endif %}
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if page_obj.has_other_pages %}
+  <div class="card-footer bg-white border-top py-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
+    <small class="text-secondary fw-semibold">Showing page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</small>
+    <nav aria-label="Product pagination">
+      <ul class="pagination pagination-sm mb-0">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+          <a class="page-link"
+            href="?page={{ page_obj.previous_page_number }}&q={{ keyword }}&pet={{ filter_pet }}&category={{ filter_category }}&sort_by={{ sort_by }}&sort_order={{ sort_order }}&sort_algo={{ sort_algo }}&search_field={{ search_field }}&search_algo={{ search_algo }}"
+            aria-label="Previous">
+            <span aria-hidden="true">&lsaquo; Prev</span>
+          </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled"><span class="page-link">&lsaquo; Prev</span></li>
+        {% endif %}
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+          <a class="page-link"
+            href="?page={{ page_obj.next_page_number }}&q={{ keyword }}&pet={{ filter_pet }}&category={{ filter_category }}&sort_by={{ sort_by }}&sort_order={{ sort_order }}&sort_algo={{ sort_algo }}&search_field={{ search_field }}&search_algo={{ search_algo }}"
+            aria-label="Next">
+            <span aria-hidden="true">Next &rsaquo;</span>
+          </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled"><span class="page-link">Next &rsaquo;</span></li>
+        {% endif %}
+      </ul>
+    </nav>
+  </div>
+  {% endif %}
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var algoSelect = document.getElementById('searchAlgoSelect');
+    var fieldSelect = document.querySelector('select[name="search_field"]');
+    var warning = document.getElementById('binaryWarning');
+
+    function verifyBinaryConstraints() {
+      if (algoSelect && fieldSelect) {
+        if (algoSelect.value === 'binary') {
+          warning.style.display = 'inline-block';
+          if (fieldSelect.value !== 'name') {
+            warning.className = "text-danger fw-semibold";
+            warning.innerHTML = '<i class="bi bi-exclamation-triangle-fill"></i> Binary Search only supports <strong>Name</strong> field.';
+          } else {
+            warning.className = "text-warning-emphasis fw-semibold";
+            warning.innerHTML = '<i class="bi bi-info-circle-fill"></i> Binary Search is only applicable for searching product names (Name field only). RawrRrr!!';
+          }
+        } else {
+          warning.style.display = 'none';
+        }
+      }
+    }
+
+    if (algoSelect && fieldSelect) {
+      algoSelect.addEventListener('change', verifyBinaryConstraints);
+      fieldSelect.addEventListener('change', verifyBinaryConstraints);
+      verifyBinaryConstraints();
+    }
+  });
+
+  function showLoadingState() {
+    const overlay = document.getElementById('tableLoadingOverlay');
+    if (overlay) {
+      overlay.classList.remove('d-none');
+      overlay.classList.add('d-flex');
+    }
+  }
+</script>
+{% endblock %}

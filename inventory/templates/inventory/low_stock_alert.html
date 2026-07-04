@@ -1,0 +1,199 @@
+{% extends 'inventory/base.html' %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
+  <div>
+    <h2 class="fw-bold mb-1" style="font-family:'Outfit',serif; font-size:1.6rem; color:var(--text-primary);">
+      <i
+        class="bi bi-exclamation-triangle-fill text-warning me-2 animate__animated animate__pulse animate__infinite"></i>Stock
+      Alert Dashboard
+    </h2>
+    <p class="text-secondary mb-0" style="font-weight: 500;">Review critical and low-stock inventory items (threshold
+      limit: &le; {{ threshold }} units)</p>
+  </div>
+  <a href="{% url 'product_list' %}" class="btn btn-outline-secondary bg-white text-secondary">
+    <i class="bi bi-arrow-left"></i> Back to Catalog
+  </a>
+</div>
+
+
+<div class="row g-3 mb-4">
+
+
+  <div class="col-md-6">
+    <div class="card border-0 shadow-sm"
+      style="background: rgba(245, 158, 11, 0.05); border-left: 5px solid #f59e0b !important;">
+      <div class="card-body d-flex align-items-center gap-3">
+        <div class="rounded-3 d-flex align-items-center justify-content-center flex-shrink-0"
+          style="width:52px; height:52px; background-color: rgba(245, 158, 11, 0.18);">
+          <i class="bi bi-exclamation-triangle-fill text-warning" style="font-size: 1.6rem;"></i>
+        </div>
+        <div>
+          <div class="fs-3 fw-bold text-warning" style="font-family:'Outfit',sans-serif; line-height:1.2;">
+            {{ low_stock_products.count }}
+          </div>
+          <div class="text-secondary fw-semibold" style="font-size:0.8rem; text-transform:uppercase;">
+            Low Stock (1 - {{ threshold }} units)
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="col-md-6">
+    <div class="card border-0 shadow-sm"
+      style="background: rgba(239, 68, 68, 0.05); border-left: 5px solid #ef4444 !important;">
+      <div class="card-body d-flex align-items-center gap-3">
+        <div class="rounded-3 d-flex align-items-center justify-content-center flex-shrink-0"
+          style="width:52px; height:52px; background-color: rgba(239, 68, 68, 0.18);">
+          <i class="bi bi-x-circle-fill text-danger" style="font-size: 1.6rem;"></i>
+        </div>
+        <div>
+          <div class="fs-3 fw-bold text-danger" style="font-family:'Outfit',sans-serif; line-height:1.2;">
+            {{ out_of_stock_products.count }}
+          </div>
+          <div class="text-secondary fw-semibold" style="font-size:0.8rem; text-transform:uppercase;">
+            Out of Stock (0 units)
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+{% if out_of_stock_products %}
+<div class="card border-0 mb-4 shadow-sm">
+  <div class="card-header bg-white py-3 border-bottom d-flex align-items-center gap-2">
+    <i class="bi bi-x-circle-fill text-danger"></i>
+    <span class="fw-bold text-danger">Out of Stock Products</span>
+    <span class="badge bg-danger ms-auto rounded-pill">{{ out_of_stock_products.count }}</span>
+  </div>
+  <div class="table-responsive">
+    <table class="table mb-0 align-middle">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Pet Type</th>
+          <th>Category</th>
+          <th class="text-end">Price (Rp)</th>
+          <th class="text-center">Stock</th>
+          {% if user_role == 'admin' or user_role == 'owner' %}
+          <th class="text-end">Actions</th>
+          {% endif %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in out_of_stock_products %}
+        <tr style="background-color: rgba(239, 68, 68, 0.01);">
+          <td>
+            <a href="{% url 'product_detail' p.pk %}" class="text-decoration-none text-dark fw-bold hover:text-danger">
+              {{ p.name }}
+            </a>
+          </td>
+          <td>
+            <span class="badge bg-light text-secondary border px-2.5 py-1">
+              {% if p.pet == 'Cat' %}<i class="bi bi-cat me-1 text-info"></i>{% else %}<i
+                class="bi bi-dog me-1 text-primary"></i>{% endif %}{{ p.pet }}
+            </span>
+          </td>
+          <td>
+            <span class="text-secondary" style="font-size: 0.85rem;">{{ p.category }}</span>
+          </td>
+          <td class="text-end fw-bold text-dark">
+            Rp {{ p.price|floatformat:0 }}
+          </td>
+          <td class="text-center">
+            <span class="status-pill status-out">Empty</span>
+          </td>
+          {% if user_role == 'admin' or user_role == 'owner' %}
+          <td class="text-end">
+            <div class="pe-3">
+              <a href="{% url 'edit_product' p.pk %}" class="btn btn-sm btn-warning btn-icon" title="Edit product"><i
+                  class="bi bi-pencil"></i></a>
+            </div>
+          </td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+
+
+{% if low_stock_products %}
+<div class="card border-0 mb-4 shadow-sm">
+  <div class="card-header bg-white py-3 border-bottom d-flex align-items-center gap-2">
+    <i class="bi bi-exclamation-triangle-fill text-warning"></i>
+    <span class="fw-bold text-warning">Low Stock Products (1 - {{ threshold }} units)</span>
+    <span class="badge bg-warning text-dark ms-auto rounded-pill">{{ low_stock_products.count }}</span>
+  </div>
+  <div class="table-responsive">
+    <table class="table mb-0 align-middle">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Pet Type</th>
+          <th>Category</th>
+          <th class="text-end">Price (Rp)</th>
+          <th class="text-center">Stock</th>
+          {% if user_role == 'admin' or user_role == 'owner' %}
+          <th class="text-end">Actions</th>
+          {% endif %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in low_stock_products %}
+        <tr style="background-color: rgba(245, 158, 11, 0.01);">
+          <td>
+            <a href="{% url 'product_detail' p.pk %}" class="text-decoration-none text-dark fw-bold hover:text-primary">
+              {{ p.name }}
+            </a>
+          </td>
+          <td>
+            <span class="badge bg-light text-secondary border px-2.5 py-1">
+              {% if p.pet == 'Cat' %}<i class="bi bi-cat me-1 text-info"></i>{% else %}<i
+                class="bi bi-dog me-1 text-primary"></i>{% endif %}{{ p.pet }}
+            </span>
+          </td>
+          <td>
+            <span class="text-secondary" style="font-size: 0.85rem;">{{ p.category }}</span>
+          </td>
+          <td class="text-end fw-bold text-dark">
+            Rp {{ p.price|floatformat:0 }}
+          </td>
+          <td class="text-center">
+            <span class="status-pill status-low">{{ p.stock }} units</span>
+          </td>
+          {% if user_role == 'admin' or user_role == 'owner' %}
+          <td class="text-end">
+            <div class="pe-3">
+              <a href="{% url 'edit_product' p.pk %}" class="btn btn-sm btn-warning btn-icon" title="Edit product"><i
+                  class="bi bi-pencil"></i></a>
+            </div>
+          </td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+
+{% if not low_stock_products and not out_of_stock_products %}
+<div class="card border-0 shadow-sm">
+  <div class="card-body text-center py-5 text-secondary">
+    <div class="py-4 animate__animated animate__fadeIn">
+      <i class="bi bi-shield-check fs-1 text-success"></i>
+      <h5 class="mt-3 fw-bold text-dark">All products are well-stocked!</h5>
+      <p class="text-secondary mb-0" style="font-size: 0.85rem;">No active items fall below the threshold level of {{ threshold }} units.</p>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

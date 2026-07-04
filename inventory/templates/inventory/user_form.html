@@ -1,0 +1,153 @@
+{% extends 'inventory/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="d-flex align-items-center gap-3 mb-4">
+      <a href="{% url 'user_list' %}" class="btn btn-outline-secondary btn-icon bg-white text-secondary"
+        title="Back to user catalog">
+        <i class="bi bi-arrow-left fs-5"></i>
+      </a>
+      <div>
+        <h2 class="fw-bold mb-1" style="font-family:'Outfit',serif; font-size:1.6rem; color:var(--text-primary);">
+          {% if target_user %}Edit User Account{% else %}Add New User{% endif %}
+        </h2>
+        <p class="text-secondary mb-0" style="font-weight: 500;">
+          {% if target_user %}Modify account specifications for @{{ target_user.username }}{% else %}Register
+          credentials and permissions for new staff members{% endif %}
+        </p>
+      </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-white py-3 border-bottom d-flex align-items-center gap-2">
+        <i class="bi bi-person-gear text-primary fs-5"></i>
+        <span class="fw-bold">{% if target_user %}Account Settings: @{{ target_user.username }}{% else %}Profile
+          Specifications{% endif %}</span>
+      </div>
+
+      <div class="card-body p-4">
+        <form method="post" enctype="multipart/form-data" id="userForm">
+          {% csrf_token %}
+
+          {% if form.non_field_errors %}
+          <div class="alert alert-danger border-0 mb-4 rounded-3 d-flex align-items-center gap-2" role="alert"
+            style="background: rgba(239, 68, 68, 0.05); color: var(--danger);">
+            <i class="bi bi-exclamation-circle-fill"></i>
+            <div>
+              {% for error in form.non_field_errors %}
+              <div>{{ error }}</div>
+              {% endfor %}
+            </div>
+          </div>
+          {% endif %}
+
+          <div class="row">
+            <div class="col-md-8">
+              {% for field in form %}
+              <div class="mb-4">
+                <label class="form-label fw-bold text-dark mb-2" style="font-size:0.85rem;">
+                  {{ field.label }}
+                  {% if field.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+
+                {{ field }}
+
+                {% if field.errors %}
+                <div class="invalid-feedback-error text-danger fw-semibold mt-1" style="font-size:0.8rem;">
+                  <i class="bi bi-exclamation-circle me-1"></i>{{ field.errors|join:", " }}
+                </div>
+                {% endif %}
+                {% if field.help_text %}
+                <div class="text-secondary mt-1" style="font-size:0.75rem; font-weight: 500;">
+                  <i class="bi bi-info-circle me-1"></i>{{ field.help_text }}
+                </div>
+                {% endif %}
+              </div>
+              {% endfor %}
+            </div>
+
+            <div class="col-md-4 border-start border-secondary border-opacity-10 ps-md-4">
+              <div class="sticky-top" style="top: 90px; z-index: 1;">
+                <label class="form-label fw-bold text-dark mb-2" style="font-size:0.85rem;">Avatar Preview</label>
+
+                <div
+                  class="card border border-secondary border-opacity-25 bg-light d-flex align-items-center justify-content-center overflow-hidden position-relative rounded-circle mx-auto"
+                  style="width: 160px; height: 160px;">
+                  <div id="avatarPreviewPlaceholder"
+                    class="text-center p-3 {% if target_user and profile.photo %}d-none{% endif %}">
+                    <i class="bi bi-person text-secondary opacity-50" style="font-size: 3rem;"></i>
+                  </div>
+
+                  <img id="avatarPreview" src="{% if target_user and profile.photo %}{{ profile.photo.url }}{% endif %}"
+                    data-initial-src="{% if target_user and profile.photo %}{{ profile.photo.url }}{% endif %}"
+                    class="w-100 h-100 {% if not target_user or not profile.photo %}d-none{% endif %}"
+                    style="object-fit: cover;" alt="Avatar Preview" />
+                </div>
+
+                <div class="mt-4 text-center text-secondary animate__animated animate__fadeIn"
+                  style="font-size: 0.75rem; font-weight: 500; line-height: 1.4;">
+                  <i class="bi bi-image text-primary"></i> Upload clear profile image. Ideal is square proportions, PNG
+                  or JPEG.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex gap-3 pt-3 border-top border-secondary border-opacity-10">
+            <button type="submit" class="btn btn-primary px-4">
+              <i class="bi bi-check-lg"></i> {% if target_user %}Update Profile{% else %}Create Account{% endif %}
+            </button>
+            <a href="{% url 'user_list' %}" class="btn btn-outline-secondary bg-white">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const fileInput = document.querySelector('input[type="file"][name="photo"]');
+    const avatarPreview = document.getElementById('avatarPreview');
+    const previewPlaceholder = document.getElementById('avatarPreviewPlaceholder');
+
+    if (fileInput) {
+      fileInput.addEventListener('change', function (e) {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function (event) {
+            avatarPreview.src = event.target.result;
+            avatarPreview.classList.remove('d-none');
+            previewPlaceholder.classList.add('d-none');
+          };
+          reader.readAsDataURL(file);
+        } else {
+          // If cleared
+          const initialSrc = avatarPreview.getAttribute('data-initial-src');
+          if (initialSrc) {
+            avatarPreview.src = initialSrc;
+            avatarPreview.classList.remove('d-none');
+            previewPlaceholder.classList.add('d-none');
+          } else {
+            avatarPreview.src = "";
+            avatarPreview.classList.add('d-none');
+            previewPlaceholder.classList.remove('d-none');
+          }
+        }
+      });
+    }
+
+    document.querySelectorAll('.invalid-feedback-error').forEach(function (errorContainer) {
+      const fieldBlock = errorContainer.closest('.mb-4');
+      if (fieldBlock) {
+        const inputElement = fieldBlock.querySelector('.form-control, .form-select');
+        if (inputElement) {
+          inputElement.classList.add('is-invalid');
+        }
+      }
+    });
+  });
+</script>
+{% endblock %}
