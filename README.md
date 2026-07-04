@@ -262,57 +262,6 @@ erDiagram
 
 <br/>
 
-## Setup & Installation
-
-**1. Clone the repository**
-```bash
-git clone https://github.com/username/repo-name.git
-cd "Pet Shop Management System"
-```
-
-**2. Create a virtual environment**
-```bash
-python -m venv venv
-
-# Windows (PowerShell)
-.\venv\Scripts\Activate.ps1
-
-# Windows (CMD)
-.\venv\Scripts\activate.bat
-
-# Linux/macOS
-source venv/bin/activate
-```
-
-**3. Install dependencies**
-```bash
-pip install -r requirements.txt
-```
-
-**4. Run database migrations**
-```bash
-python manage.py migrate
-```
-
-**5. Set up default roles & accounts**
-```bash
-python setup_roles.py
-```
-
-**6. Seed sample data**
-```bash
-python seed_data.py
-```
-
-**7. Start the server**
-```bash
-python manage.py runserver
-```
-
-Open `http://127.0.0.1:8000/` in your browser to access the application.
-
-<br/>
-
 ## Demo Accounts
 
 | Username | Password | Role | Description |
@@ -333,11 +282,11 @@ Open `http://127.0.0.1:8000/` in your browser to access the application.
 
 <div align="center">
 
-| Name | Role |
+| Name | Contribution |
 |---|---|
-| **Dallen Friedolin Manuel Daely** | Developer & Algorithm Architect |
-| **Nabila F Andina Lubis** | UI/UX Designer & Template Developer |
-| **Hani Septiani** | Database Administrator & Quality Assurance |
+| **Dallen Friedolin Manuel Daely** | Full Stack Developer, System Architect, Algorithm Engineer |
+| **Nabila F Andina Lubis** | Project Lead, Database Designer, UI Developer |
+| **Hani Septiani** | Testing, Database Designer |
 
 </div>
 
@@ -349,6 +298,6 @@ Built to fulfill the final project for Data Structures and Algorithms.
 
 <img src="https://capsule-render.vercel.app/api?type=waving&amp;color=0:3776AB,100:092E20&amp;height=100&amp;section=footer&amp;animation=fadeIn" width="100%"/>
 
-*Copyright © 2026. All rights reserved.*
+*See You Next Projects, RawRrrr!!!!!*
 
 </div>
