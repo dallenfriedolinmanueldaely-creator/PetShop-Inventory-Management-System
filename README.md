@@ -65,7 +65,7 @@ User activity logging (logins, product changes, data exports) plus role-based ac
 
 <br/>
 
-## Application Preview
+## Application Preview (WAIT COMING SOON)
 
 <div align="center">
 
