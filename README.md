@@ -286,7 +286,7 @@ erDiagram
 |---|---|
 | **Dallen Friedolin Manuel Daely** | Full Stack Developer, System Architect, Algorithm Engineer |
 | **Nabila F Andina Lubis** | Project Lead, Database Designer, UI Developer |
-| **Hani Septiani** | Testing, Database Designer |
+| **Hani Septiani** | Assisted with project discussion, testing |
 
 </div>
 
