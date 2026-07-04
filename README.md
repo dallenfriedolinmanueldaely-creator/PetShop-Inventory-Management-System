@@ -1,4 +1,5 @@
-<<div align="center">
+```
+<div align="center">
 
 <img src="https://capsule-render.vercel.app/api?type=waving&color=0:092E20,100:3776AB&height=200&section=header&text=Petshop%20Inventory%20System&fontSize=42&fontColor=ffffff&animation=fadeIn&fontAlignY=38&desc=Web-based%20Inventory%20Management%20with%20Custom%20Search%20%26%20Sort%20Algorithms&descAlignY=58&descSize=16" width="100%"/>
 
@@ -197,6 +198,7 @@ if sort_by:
         products = insertion_sort(products, field=sort_by, ascending=ascending)
     else:
         products = bubble_sort(products, field=sort_by, ascending=ascending)
+```
 
 <br/>
 
@@ -368,6 +370,5 @@ Built to fulfill the final project for Data Structures and Algorithms.
 
 <img src="https://capsule-render.vercel.app/api?type=waving&color=0:3776AB,100:092E20&height=100&section=footer" width="100%"/>
 
-*Copyright © 2026. All rights reserved.*
-
 </div>
+```
