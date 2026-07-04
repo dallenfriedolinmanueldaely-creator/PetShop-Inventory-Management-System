@@ -63,24 +63,6 @@ User activity logging (logins, product changes, data exports) plus role-based ac
 
 <br/>
 
-## Application Preview
-
-<div align="center">
-
-**Dashboard**
-<br/>
-<img src="./docs/screenshots/dashboard.png" width="85%" alt="Dashboard Preview"/>
-
-<br/><br/>
-
-**Product Catalog**
-<br/>
-<img src="./docs/screenshots/catalog.png" width="85%" alt="Catalog Preview"/>
-
-</div>
-
-<br/>
-
 ## Tech Stack
 
 | Layer | Technology |
