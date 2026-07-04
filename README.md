@@ -1,4 +1,3 @@
-```
 <div align="center">
 
 <img src="https://capsule-render.vercel.app/api?type=waving&color=0:092E20,100:3776AB&height=200&section=header&text=Petshop%20Inventory%20System&fontSize=42&fontColor=ffffff&animation=fadeIn&fontAlignY=38&desc=Web-based%20Inventory%20Management%20with%20Custom%20Search%20%26%20Sort%20Algorithms&descAlignY=58&descSize=16" width="100%"/>
@@ -11,31 +10,11 @@
 
 <br/><br/>
 
-[
-
-![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white)
-
-](https://www.python.org/)
-[
-
-![Django](https://img.shields.io/badge/Django-4.2+-092E20?style=for-the-badge&logo=django&logoColor=white)
-
-](https://www.djangoproject.com/)
-[
-
-![SQLite](https://img.shields.io/badge/SQLite-3.0+-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
-
-](https://www.sqlite.org/)
-[
-
-![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white)
-
-](https://getbootstrap.com/)
-[
-
-![License](https://img.shields.io/badge/License-Academic-lightgrey?style=for-the-badge)
-
-](#)
+[![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![Django](https://img.shields.io/badge/Django-4.2+-092E20?style=for-the-badge&logo=django&logoColor=white)](https://www.djangoproject.com/)
+[![SQLite](https://img.shields.io/badge/SQLite-3.0+-003B57?style=for-the-badge&logo=sqlite&logoColor=white)](https://www.sqlite.org/)
+[![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white)](https://getbootstrap.com/)
+[![License](https://img.shields.io/badge/License-Academic-lightgrey?style=for-the-badge)](#)
 
 <br/>
 
@@ -371,4 +350,3 @@ Built to fulfill the final project for Data Structures and Algorithms.
 <img src="https://capsule-render.vercel.app/api?type=waving&color=0:3776AB,100:092E20&height=100&section=footer" width="100%"/>
 
 </div>
-```
