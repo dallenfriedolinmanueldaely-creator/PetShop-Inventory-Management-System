@@ -1,11 +1,11 @@
 <div align="center">
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:092E20,100:3776AB&height=200&section=header&text=Petshop%20Inventory%20System&fontSize=42&fontColor=ffffff&animation=fadeIn&fontAlignY=38&desc=Web-based%20Inventory%20Management%20with%20Custom%20Search%20%26%20Sort%20Algorithms&descAlignY=58&descSize=16" width="100%"/>
+<img src="https://capsule-render.vercel.app/api?type=waving&amp;color=0:092E20,100:3776AB&amp;height=200&amp;section=header&amp;text=Petshop%20Inventory%20System&amp;fontSize=42&amp;fontColor=ffffff&amp;animation=fadeIn&amp;fontAlignY=38&amp;desc=Web-based%20Inventory%20Management%20with%20Custom%20Search%20and%20Sort%20Algorithms&amp;descAlignY=58&amp;descSize=16" width="100%"/>
 
 <br/>
 
 <a href="https://git.io/typing-svg">
-  <img src="https://readme-typing-svg.demolab.com?font=Poppins&weight=600&size=22&duration=3000&pause=800&color=3776AB&center=true&vCenter=true&width=650&lines=Built+with+Django+%2B+Python;Custom+Linear+%26+Binary+Search;Bubble%2C+Selection%2C+Insertion+Sort;Final+Project+-+Data+Structures+%26+Algorithms" alt="Typing SVG" />
+  <img src="https://readme-typing-svg.demolab.com?font=Poppins&amp;weight=600&amp;size=22&amp;duration=3000&amp;pause=800&amp;color=3776AB&amp;center=true&amp;vCenter=true&amp;width=650&amp;lines=Built+with+Django+%2B+Python;Custom+Linear+%26+Binary+Search;Bubble%2C+Selection%2C+Insertion+Sort;Final+Project+-+Data+Structures+%26+Algorithms" alt="Typing SVG" />
 </a>
 
 <br/><br/>
@@ -71,13 +71,13 @@ User activity logging (logins, product changes, data exports) plus role-based ac
 
 **Dashboard**
 <br/>
-<img src="https://raw.githubusercontent.com/username/repo-name/main/docs/screenshots/dashboard.png" width="85%" alt="Dashboard Preview"/>
+<img src="./docs/screenshots/dashboard.png" width="85%" alt="Dashboard Preview"/>
 
 <br/><br/>
 
 **Product Catalog**
 <br/>
-<img src="https://raw.githubusercontent.com/username/repo-name/main/docs/screenshots/catalog.png" width="85%" alt="Catalog Preview"/>
+<img src="./docs/screenshots/catalog.png" width="85%" alt="Catalog Preview"/>
 
 </div>
 
@@ -347,7 +347,7 @@ Open `http://127.0.0.1:8000/` in your browser to access the application.
 
 Built to fulfill the final project for Data Structures and Algorithms.
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:3776AB,100:092E20&height=100&section=footer" width="100%"/>
+<img src="https://capsule-render.vercel.app/api?type=waving&amp;color=0:3776AB,100:092E20&amp;height=100&amp;section=footer&amp;animation=fadeIn" width="100%"/>
 
 *Copyright © 2026. All rights reserved.*
 
