@@ -1,7 +1,5 @@
 <div align="center">
 
-<img src="https://capsule-render.vercel.app/api?type=waving&amp;color=0:092E20,100:3776AB&amp;height=200&amp;section=header&amp;text=Petshop%20Inventory%20System&amp;fontSize=42&amp;fontColor=ffffff&amp;animation=fadeIn&amp;fontAlignY=38&amp;desc=Web-based%20Inventory%20Management%20with%20Custom%20Search%20%26%20Sort%20Algorithms&amp;descAlignY=58&amp;descSize=16" width="100%"/>
-
 <br/>
 
 <a href="https://git.io/typing-svg">
