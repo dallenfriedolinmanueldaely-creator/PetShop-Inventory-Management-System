@@ -5,7 +5,7 @@
 <br/>
 
 <a href="https://git.io/typing-svg">
-  <img src="https://readme-typing-svg.demolab.com?font=Poppins&weight=600&size=22&duration=3000&pause=800&color=3776AB&center=true&vCenter=true&width=650&lines=Dibangun+dengan+Django+%2B+Python;Custom+Linear+%26+Binary+Search;Bubble%2C+Selection%2C+Insertion+Sort;Final+Project+-+Struktur+Data+%26+Algoritma" alt="Typing SVG" />
+  <img src="https://readme-typing-svg.demolab.com?font=Poppins&weight=600&size=22&duration=3000&pause=800&color=3776AB&center=true&vCenter=true&width=650&lines=Built+with+Django+%2B+Python;Custom+Linear+%26+Binary+Search;Bubble%2C+Selection%2C+Insertion+Sort;Final+Project+-+Data+Structures+%26+Algorithms" alt="Typing SVG" />
 </a>
 
 <br/><br/>
@@ -24,40 +24,40 @@
 
 <br/>
 
-## Tentang Proyek
+## About the Project
 
-**Petshop Inventory Management System** adalah aplikasi web yang dikembangkan untuk memenuhi tugas akhir mata kuliah **Struktur Data & Algoritma**. Alih-alih mengandalkan query database bawaan seperti `ORDER BY` atau `LIKE`, seluruh proses pencarian dan pengurutan data diimplementasikan secara manual di level aplikasi menggunakan algoritma klasik: **Linear Search**, **Binary Search**, **Bubble Sort**, **Selection Sort**, dan **Insertion Sort**.
+**Petshop Inventory Management System** is a web application built to fulfill the final project requirements for the **Data Structures and Algorithms** course. Instead of relying on database-level operations like `ORDER BY` or `LIKE`, all searching and sorting logic is implemented manually at the application layer using classic algorithms: **Linear Search**, **Binary Search**, **Bubble Sort**, **Selection Sort**, and **Insertion Sort**.
 
-Sistem ini dirancang untuk membantu pemilik dan staf petshop mengelola inventori produk (kategori Cat & Dog: makanan, vitamin, grooming, mainan, dan aksesoris), mencatat riwayat transaksi stok masuk/keluar, memantau analitik secara visual, serta mengekspor laporan ke Excel dan CSV.
+The system helps petshop owners and staff manage product inventory (Cat & Dog categories: food, vitamins, grooming, toys, and accessories), log stock in/out transactions, monitor visual analytics, and export reports to Excel and CSV.
 
 <br/>
 
-## Fitur Unggulan
+## Key Features
 
 <table>
 <tr>
 <td width="50%" valign="top">
 
-**Dashboard Interaktif**
-Kartu statistik real-time untuk total produk, volume stok aktif, produk menipis/habis, dan distribusi kategori melalui grafik Chart.js.
+**Interactive Dashboard**
+Real-time stat cards for total products, active stock volume, low/out-of-stock items, and category breakdowns via Chart.js.
 
-**Pencarian Cerdas**
-Cari produk berdasarkan nama, kategori, atau jenis hewan menggunakan Linear Search maupun Binary Search sesuai kebutuhan performa.
+**Smart Search**
+Search products by name, category, or pet type using either Linear Search or Binary Search depending on performance needs.
 
-**Pengurutan Algoritmik**
-Urutkan katalog berdasarkan nama, harga, atau stok memakai implementasi manual Bubble Sort, Selection Sort, dan Insertion Sort.
+**Algorithmic Sorting**
+Sort the catalog by name, price, or stock using hand-written implementations of Bubble Sort, Selection Sort, and Insertion Sort.
 
 </td>
 <td width="50%" valign="top">
 
-**Buku Besar Transaksi**
-Pencatatan stok masuk dan keluar yang atomik, lengkap dengan validasi agar stok tidak pernah minus.
+**Transaction Ledger**
+Atomic stock in/out records with built-in validation to prevent stock from ever going negative.
 
-**Laporan Profesional**
-Ekspor data inventori sekali klik ke format CSV maupun Excel (.xlsx) dengan format yang rapi.
+**Professional Reports**
+One-click export of inventory data to clean, well-formatted CSV or Excel (.xlsx) files.
 
-**Audit & Kontrol Akses**
-Pencatatan aktivitas pengguna (login, perubahan produk, ekspor data) serta kontrol akses berbasis peran (Owner, Admin, Staff).
+**Audit & Access Control**
+User activity logging (logins, product changes, data exports) plus role-based access control for Owner, Admin, and Staff.
 
 </td>
 </tr>
@@ -65,7 +65,7 @@ Pencatatan aktivitas pengguna (login, perubahan produk, ekspor data) serta kontr
 
 <br/>
 
-## Pratinjau Aplikasi
+## Application Preview
 
 <div align="center">
 
@@ -75,7 +75,7 @@ Pencatatan aktivitas pengguna (login, perubahan produk, ekspor data) serta kontr
 
 <br/><br/>
 
-**Katalog Produk**
+**Product Catalog**
 <br/>
 <img src="https://raw.githubusercontent.com/username/repo-name/main/docs/screenshots/catalog.png" width="85%" alt="Catalog Preview"/>
 
@@ -83,92 +83,92 @@ Pencatatan aktivitas pengguna (login, perubahan produk, ekspor data) serta kontr
 
 <br/>
 
-## Tumpukan Teknologi
+## Tech Stack
 
-| Layer | Teknologi |
+| Layer | Technology |
 |---|---|
-| Backend | Python 3.11+, Django 4.2.x (custom decorator untuk RBAC) |
+| Backend | Python 3.11+, Django 4.2.x (custom decorators for RBAC) |
 | Database | SQLite3 |
 | Frontend | Bootstrap 5.3, Bootstrap Icons, Animate.css, custom CSS variables |
-| Visualisasi | Chart.js (via CDN) |
-| Ekspor Data | `openpyxl`, modul `csv` bawaan Python |
+| Visualization | Chart.js (via CDN) |
+| Data Export | `openpyxl`, Python's built-in `csv` module |
 
 <br/>
 
-## Memahami Algoritma
+## Understanding the Algorithms
 
 <details>
 <summary><b>Linear Search — O(n)</b></summary>
 <br/>
 
-Menelusuri seluruh elemen daftar produk satu per satu dari awal hingga akhir untuk menemukan kecocokan.
+Traverses the product list element by element from start to finish to find matches.
 
-- **Kelebihan**: fleksibel, bekerja pada data yang belum terurut, dan bisa diterapkan ke field apa saja.
-- **Kekurangan**: melambat seiring bertambahnya jumlah produk karena kompleksitasnya linear.
+- **Pros**: flexible, works on unsorted data, and applies to any field.
+- **Cons**: slows down as the number of products grows, since it scales linearly.
 </details>
 
 <details>
 <summary><b>Binary Search — O(log n)</b></summary>
 <br/>
 
-Membagi dua interval pencarian secara berulang. Mengharuskan daftar produk sudah terurut berdasarkan **nama** terlebih dahulu.
+Repeatedly halves the search interval. Requires the product list to already be sorted by **name**.
 
-- **Kelebihan**: sangat cepat bahkan untuk dataset besar.
-- **Kekurangan**: pada implementasi ini hanya berlaku untuk pencarian berdasarkan field nama.
+- **Pros**: extremely fast, even on large datasets.
+- **Cons**: in this implementation, only applicable to the name search field.
 </details>
 
 <details>
 <summary><b>Bubble Sort — O(n²)</b></summary>
 <br/>
 
-Membandingkan pasangan produk yang bersebelahan dan menukarnya jika urutannya salah, diulang hingga tidak ada lagi pertukaran.
+Compares adjacent products and swaps them if out of order, repeating until no more swaps are needed.
 
-- **Kelebihan**: mudah diimplementasikan, memiliki optimasi early-termination jika data sudah terurut.
-- **Kekurangan**: kompleksitas rata-rata tinggi, kurang cocok untuk katalog besar.
+- **Pros**: simple to implement, with early-termination optimization if the data is already sorted.
+- **Cons**: high average-case complexity, less suitable for large catalogs.
 </details>
 
 <details>
 <summary><b>Selection Sort — O(n²)</b></summary>
 <br/>
 
-Membagi daftar menjadi bagian terurut dan belum terurut, lalu berulang kali memindahkan elemen minimum/maksimum ke posisi yang tepat.
+Splits the list into a sorted and unsorted portion, repeatedly moving the minimum/maximum element into place.
 
-- **Kelebihan**: jumlah operasi tukar (swap) lebih sedikit dibanding Bubble Sort.
-- **Kekurangan**: tetap berjalan pada O(n²) terlepas dari urutan awal data.
+- **Pros**: fewer swap operations compared to Bubble Sort.
+- **Cons**: always runs in O(n²) regardless of the initial order.
 </details>
 
 <details>
 <summary><b>Insertion Sort — O(n²)</b></summary>
 <br/>
 
-Membangun daftar terurut satu per satu dengan menyisipkan setiap produk ke posisi yang tepat pada bagian yang sudah terurut.
+Builds the sorted list one item at a time by inserting each product into its correct position within the already-sorted portion.
 
-- **Kelebihan**: sangat efisien untuk dataset kecil atau data yang sudah hampir terurut.
-- **Kekurangan**: kurang efisien untuk data acak atau terbalik total.
+- **Pros**: very efficient for small or nearly-sorted datasets.
+- **Cons**: inefficient for fully random or reverse-ordered data.
 </details>
 
 <br/>
 
-## Integrasi Algoritma
+## Algorithm Integration
 
-Seluruh logika filter dan konfigurasi katalog diproses di dalam `inventory/views.py`, melalui fungsi `_apply_product_filters()`:
+All filtering and catalog configuration logic lives in `inventory/views.py`, inside the `_apply_product_filters()` function:
 
 ```python
-# Mengambil parameter dari request GET
+# Extract parameters from the GET request
 keyword = request.GET.get('q', '').strip()
 search_algo = request.GET.get('search_algo', 'linear')
 sort_algo = request.GET.get('sort_algo', 'bubble')
 sort_by = request.GET.get('sort_by', '')
 sort_order = request.GET.get('sort_order', 'asc')
 
-# Tahap pencarian
+# Search stage
 if keyword:
     if search_algo == 'binary' and search_field == 'name':
         products = binary_search_by_nama(products, keyword)
     else:
         products = linear_search(products, keyword, field=search_field)
 
-# Tahap pengurutan
+# Sort stage
 if sort_by:
     ascending = (sort_order == 'asc')
     if sort_algo == 'selection':
@@ -181,47 +181,47 @@ if sort_by:
 
 <br/>
 
-## Struktur Folder
+## Folder Structure
 
 ```
 Pet Shop Management System/
 │
-├── inventory/                  # Aplikasi inti
-│   ├── migrations/              # Skema database
-│   ├── static/                  # Aset statis (logo, gambar, stylesheet)
-│   ├── templates/                # Template HTML (inherit dari base.html)
-│   ├── admin.py                  # Registrasi admin
-│   ├── algorithms.py             # Implementasi searching & sorting kustom
-│   ├── constants.py              # Konstanta global (mis. batas stok menipis)
-│   ├── context_processors.py     # Context variable global (indikator alert)
-│   ├── decorators.py             # Decorator kustom untuk RBAC
-│   ├── forms.py                  # Definisi form (produk, user)
-│   ├── models.py                 # Definisi model (Product, Transaction, Log)
-│   ├── urls.py                   # Routing URL aplikasi
-│   ├── views.py                  # Logika dan controller aplikasi
+├── inventory/                  # Core app
+│   ├── migrations/              # Database schemas
+│   ├── static/                  # Static assets (logo, images, stylesheets)
+│   ├── templates/                # HTML templates (inheriting base.html)
+│   ├── admin.py                  # Admin registration
+│   ├── algorithms.py             # Custom searching & sorting implementations
+│   ├── constants.py              # Global constants (e.g. low-stock threshold)
+│   ├── context_processors.py     # Global context variables (alert indicators)
+│   ├── decorators.py             # Custom decorators for RBAC
+│   ├── forms.py                  # Form definitions (products, users)
+│   ├── models.py                 # Model definitions (Product, Transaction, Log)
+│   ├── urls.py                   # App URL routing
+│   ├── views.py                  # Application logic and controllers
 │   └── tests.py                  # Test suite
 │
-├── petshop_inventory/           # Modul pengaturan proyek
-│   ├── settings.py               # Pengaturan utama Django
-│   ├── urls.py                   # Router URL root
-│   └── wsgi.py                   # Konfigurasi WSGI
+├── petshop_inventory/           # Project settings module
+│   ├── settings.py               # Main Django settings
+│   ├── urls.py                   # Root URL router
+│   └── wsgi.py                   # WSGI configuration
 │
-├── db.sqlite3                    # Berkas database
-├── manage.py                     # CLI runner Django
-├── requirements.txt              # Daftar dependency
-├── seed_data.py                  # Utilitas seeding database
-└── setup_roles.py                # Utilitas setup akun dan grup pengguna
+├── db.sqlite3                    # Database file
+├── manage.py                     # Django CLI runner
+├── requirements.txt              # Package dependencies
+├── seed_data.py                  # Database seeding utility
+└── setup_roles.py                # User accounts & groups setup utility
 ```
 
 <br/>
 
-## Skema Database (ERD)
+## Database Schema (ERD)
 
 ```mermaid
 erDiagram
-    PRODUCT ||--o{ STOCKIN : memiliki
-    PRODUCT ||--o{ STOCKOUT : memiliki
-    PRODUCT ||--o{ TRANSACTIONHISTORY : mencatat
+    PRODUCT ||--o{ STOCKIN : has
+    PRODUCT ||--o{ STOCKOUT : has
+    PRODUCT ||--o{ TRANSACTIONHISTORY : logs
 
     PRODUCT {
         int id PK
@@ -262,15 +262,15 @@ erDiagram
 
 <br/>
 
-## Instalasi & Menjalankan Proyek
+## Setup & Installation
 
-**1. Clone repository**
+**1. Clone the repository**
 ```bash
 git clone https://github.com/username/repo-name.git
 cd "Pet Shop Management System"
 ```
 
-**2. Buat virtual environment**
+**2. Create a virtual environment**
 ```bash
 python -m venv venv
 
@@ -284,56 +284,56 @@ python -m venv venv
 source venv/bin/activate
 ```
 
-**3. Install dependency**
+**3. Install dependencies**
 ```bash
 pip install -r requirements.txt
 ```
 
-**4. Jalankan migrasi database**
+**4. Run database migrations**
 ```bash
 python manage.py migrate
 ```
 
-**5. Setup role & akun default**
+**5. Set up default roles & accounts**
 ```bash
 python setup_roles.py
 ```
 
-**6. Seed data contoh**
+**6. Seed sample data**
 ```bash
 python seed_data.py
 ```
 
-**7. Jalankan server**
+**7. Start the server**
 ```bash
 python manage.py runserver
 ```
 
-Buka `http://127.0.0.1:8000/` di browser untuk mengakses aplikasi.
+Open `http://127.0.0.1:8000/` in your browser to access the application.
 
 <br/>
 
-## Akun Demo
+## Demo Accounts
 
-| Username | Password | Peran | Deskripsi |
+| Username | Password | Role | Description |
 |---|---|---|---|
-| `owner` | `owner123` | Owner | Akses penuh, termasuk manajemen pengguna |
-| `admin` | `admin123` | Admin | Mengelola produk & transaksi, tidak bisa mengubah Owner |
-| `staff1` | `staff123` | Staff | Terbatas pada input stok masuk/keluar |
+| `owner` | `owner123` | Owner | Full access, including user management |
+| `admin` | `admin123` | Admin | Manages products & transactions, cannot modify Owner |
+| `staff1` | `staff123` | Staff | Restricted to stock in/out entry |
 
-**Rincian Peran**
+**Role Details**
 
-- **Owner** — peran tertinggi. Dapat menambah admin, mengubah semua akun, melihat log aktivitas, mengekspor data, dan menghapus item apa pun.
-- **Admin** — dapat melihat log dan mengekspor data produk, serta mengelola akun staff. Tidak bisa mengubah akun Owner.
-- **Staff** — operator lapangan, hanya bisa mencatat stok masuk/keluar tanpa akses ke direktori pengguna atau log aktivitas.
+- **Owner** — the top-level role. Can add admins, modify any account, view activity logs, export data, and delete any item.
+- **Admin** — can view logs, export product data, and manage staff accounts. Cannot modify the Owner account.
+- **Staff** — field operator, limited to recording stock in/out with no access to the user directory or activity logs.
 
 <br/>
 
-## Tim Pengembang
+## Team
 
 <div align="center">
 
-| Nama | Peran |
+| Name | Role |
 |---|---|
 | **Dallen Friedolin Manuel Daely** | Developer & Algorithm Architect |
 | **Nabila F Andina Lubis** | UI/UX Designer & Template Developer |
@@ -345,7 +345,7 @@ Buka `http://127.0.0.1:8000/` di browser untuk mengakses aplikasi.
 
 <div align="center">
 
-Dibangun untuk memenuhi tugas akhir mata kuliah Struktur Data & Algoritma.
+Built to fulfill the final project for Data Structures and Algorithms.
 
 <img src="https://capsule-render.vercel.app/api?type=waving&color=0:3776AB,100:092E20&height=100&section=footer" width="100%"/>
 
